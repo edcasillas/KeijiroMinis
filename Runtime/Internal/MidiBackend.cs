@@ -19,6 +19,10 @@ namespace Minis
         private uint _lastPortCount = 0;
         private List<MidiPort> _ports = new List<MidiPort>();
 
+#if UNITY_ANDROID
+        private bool stubWarningLogged = false;
+#endif
+
         public MidiBackend()
         {
             _rtMidi = rtmidi_in_create_default();
@@ -40,6 +44,14 @@ namespace Minis
 
         protected override void OnUpdate()
         {
+#if UNITY_ANDROID
+            if (!stubWarningLogged)
+            {
+                Debug.LogWarning($"{nameof(MidiBackend)}.{nameof(OnUpdate)} is stubbed.");
+                stubWarningLogged = true;
+            }
+#else
+
             // Check for port connections/disconnections
             uint portCount = rtmidi_get_port_count(_rtMidi);
             if (!_rtMidi.Ok)
@@ -74,6 +86,7 @@ namespace Minis
                     }
                 }
             }
+#endif
         }
 
         protected override MidiChannel OnDeviceAdded(InputDevice device, IDisposable context)

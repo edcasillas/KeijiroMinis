@@ -30,7 +30,11 @@ namespace Minis.Native
 
     internal sealed class RtMidiInHandle : RtMidiHandle
     {
+#if UNITY_ANDROID
+        public RtMidiInHandle()
+#else
         private RtMidiInHandle()
+#endif
             : base(true)
         {
         }
@@ -41,13 +45,20 @@ namespace Minis.Native
             return true;
         }
 
-        [DllImport(RtMidi.DllName)]
+#if UNITY_ANDROID
+        private static void rtmidi_in_free(IntPtr device) {}
+#else
         private static extern void rtmidi_in_free(IntPtr device);
+#endif
     }
 
     internal sealed class RtMidiOutHandle : RtMidiHandle
     {
+#if UNITY_ANDROID
+        public RtMidiOutHandle()
+#else
         private RtMidiOutHandle()
+#endif
             : base(true)
         {
         }
@@ -58,8 +69,12 @@ namespace Minis.Native
             return true;
         }
 
+        #if UNITY_ANDROID
+        private static void rtmidi_out_free(IntPtr device) {}
+        #else
         [DllImport(RtMidi.DllName)]
         private static extern void rtmidi_out_free(IntPtr device);
+        #endif
     }
 
     internal unsafe delegate void RtMidiCCallback(
@@ -69,6 +84,7 @@ namespace Minis.Native
         void* userData
     );
 
+#if !UNITY_ANDROID
     internal static unsafe class RtMidi
     {
         internal const string DllName = "RtMidi.dll";
@@ -129,4 +145,5 @@ namespace Minis.Native
             int length
         );
     }
+#endif
 }

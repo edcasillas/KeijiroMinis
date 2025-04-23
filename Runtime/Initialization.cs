@@ -21,6 +21,7 @@ namespace Minis
 #endif
         internal static void Initialize()
         {
+            Debug.Log($"[ecasillas] Initializing {nameof(Minis)}.");
 #if UNITY_EDITOR
             // Uninstall the driver on domain reload.
             AssemblyReloadEvents.beforeAssemblyReload += Uninitialize;
