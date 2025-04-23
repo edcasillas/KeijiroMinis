@@ -21,6 +21,10 @@ namespace Minis
 #endif
         internal static void Initialize()
         {
+#if UNITY_ANDROID
+            Debug.LogWarning("Minis has not been initialized because this is an Android build.");
+#else
+
             Debug.Log($"[ecasillas] Initializing {nameof(Minis)}.");
 #if UNITY_EDITOR
             // Uninstall the driver on domain reload.
@@ -48,6 +52,7 @@ namespace Minis
                 Debug.LogError("[Minis] Failed to initialize backends!");
                 Debug.LogException(ex);
             }
+#endif
         }
 
         internal static void Uninitialize()
